@@ -166,7 +166,7 @@ function getCateId(cateId) {
     w       弹出层宽度（缺省调默认值）
     h       弹出层高度（缺省调默认值）
 */
-function x_admin_show(title,url,w,h){
+function open_panel(title,url,w,h){
     if (title == null || title == '') {
         title=false;
     };
@@ -193,7 +193,7 @@ function x_admin_show(title,url,w,h){
 
 
 /*关闭弹出框口*/
-function x_admin_close(){
+function close_panel(){
     var index = parent.layer.getFrameIndex(window.name);
     parent.layer.close(index);
 }

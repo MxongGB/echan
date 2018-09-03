@@ -1,20 +1,11 @@
 package com.echan.host.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.echan.host.service.AppHostService;
-import com.sun.net.httpserver.HttpContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.beans.Encoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,18 +22,28 @@ public class AppHostController {
         return "host/app_host";
     }
 
+    @PostMapping("search")
+    public String search(@RequestParam(required = true) String host_ip,Model model){
+        // 查询所有主机
+        List<Map<String,Object>> appHostList = appHostService.findAppHostByIP(host_ip);
+        model.addAttribute("appHostList",appHostList);
+        model.addAttribute("seach_key",host_ip);
+        return "host/app_host";
+    }
+
     @GetMapping("add")
-    public String addHost(Model model){
+    public String addHost(){
         return "host/add_app_host";
     }
 
     @PostMapping("add")
-    public String addHost(@RequestParam(required = true) String host_name,
+    @ResponseBody
+    public Map<String,Object> addHost(@RequestParam(required = true) String host_name,
                           @RequestParam(required = true) String host_ip,
                           @RequestParam(required = true) String user_name,
                           @RequestParam(required = true) String user_pass){
-        appHostService.addAppHost(host_name,host_ip,user_name,user_pass);
-        return "redirect:/app_host/home";
+        // 添加主机
+        return appHostService.addAppHost(host_name,host_ip,user_name,user_pass);
     }
 
     @GetMapping("edit")
@@ -53,12 +54,19 @@ public class AppHostController {
     }
 
     @PostMapping("edit")
-    public String editHost(@RequestParam(required = true) String host_name,
+    @ResponseBody
+    public Map<String,Object> editHost(@RequestParam(required = true) String host_name,
                           @RequestParam(required = true) String host_ip,
                           @RequestParam(required = true) String user_name,
                           @RequestParam(required = true) String user_pass){
-        appHostService.addAppHost(host_name,host_ip,user_name,user_pass);
-        return "redirect:/app_host/home";
+        // 修改主机信息
+        return appHostService.editAppHost(host_name,host_ip,user_name,user_pass);
     }
 
+    @PostMapping("remove")
+    @ResponseBody
+    public Map<String,Object> removeHost(@RequestParam(required = true) String host_ip){
+        // 删除主机信息
+        return appHostService.removeAppHost(host_ip);
+    }
 }

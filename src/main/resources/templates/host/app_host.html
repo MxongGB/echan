@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>应用主机</title>
@@ -11,7 +10,6 @@
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/xadmin.css">
     <script type="text/javascript" src="../../js/jquery.js"></script>
-    <script type="text/javascript" src="../../js/jquery_session.js"></script>
     <script type="text/javascript" src="../../js/layui.all.js" charset="utf-8"></script>
     <script type="text/javascript" src="../../js/xadmin.js"></script>
 </head>
@@ -21,21 +19,20 @@
       <span class="layui-breadcrumb">
         <a href="">首页</a>
         <a href="">演示</a>
-        <a>
-          <cite>导航元素</cite></a>
+        <a><cite>导航元素</cite></a>
       </span>
-    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace('/app_host/home');" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
 <div class="x-body">
     <div class="layui-row">
-        <form class="layui-form layui-col-md12 x-so">
-            <input type="text" name="username"  placeholder="请输入IP地址" autocomplete="off" class="layui-input">
-            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">查询</i></button>
+        <form class="layui-form layui-col-md12 x-so" action="/app_host/search" method="post">
+            <input type="text" id="host_ip" name="host_ip" th:value="${seach_key}" placeholder="请输入IP地址" autocomplete="off" class="layui-input">
+            <button class="layui-btn" lay-filter="sreach"><i class="layui-icon">查询</i></button>
         </form>
     </div>
     <xblock>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','/app_host/add')">添加</button>
+        <button class="layui-btn" onclick="open_panel('添加用户','/app_host/add')">添加</button>
         <span class="x-right" style="line-height:40px">共有数据：88 条</span>
     </xblock>
     <table class="layui-table">
@@ -55,13 +52,11 @@
             <td th:text="${appHost.user_name}"></td>
             <td th:text="${appHost.user_pass}"></td>
             <td class="td-manage">
-                <!-- th:href="@{/app_host/edit(ip=${appHost.host_ip})}" th:onclick="'x_admin_show('修改主机','/app_host/edit?ip=')'"-->
-                <a title="查看" >
-                    <i class="layui-icon" onclick="x_admin_show('添加用户','/app_host/edit?ip=')">查看</i>
-                </a>
-                <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                    <i class="layui-icon">删除</i>
-                </a>
+                <a title="查看" th:onclick="'javascript:open_panel(\'添加用户\',\'/app_host/edit?ip='+${appHost.host_ip}+'\');'">
+                    <i class="layui-icon">查看</i></a>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a title="删除" th:onclick="'javascript:member_del(this,\''+${appHost.host_ip}+'\');'">
+                    <i class="layui-icon">删除</i></a>
             </td>
         </tr>
         </tbody>
@@ -76,34 +71,34 @@
             <a class="next" href="">&gt;&gt;</a>
         </div>
     </div>
-
 </div>
 <script>
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
-
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#start' //指定元素
+    layui.use(['form','layer'], function(){
+        var form = layui.form, layer = layui.layer;
+        //定义验证规则
+        form.verify({
+            host_ip: function(value){ if(value.length==0){return '主机IP不能为空！';}}
         });
 
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#end' //指定元素
+        //监听提交
+        form.on('submit(sreach)', function(formData){
+            // 温馨提示
+            layer.alert("稍等...", {icon: 6},function () {close_panel();});
+            return false;
         });
     });
 
-
     /*用户-删除*/
-    function member_del(obj,id){
+    function member_del(obj,ip){
         layer.confirm('确认要删除吗？',function(index){
             //发异步删除数据
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!',{icon:1,time:1000});
+            $.post("/app_host/remove",{host_ip:ip},function (data) {
+                layer.msg(data.msge,{icon:1,time:1000});
+                // 刷新
+                location.replace('/app_host/home');
+            },"json")
         });
     }
 </script>
-
 </body>
-
 </html>
