@@ -30,7 +30,7 @@
 <div class="x-body">
     <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so">
-            <input type="text" name="username"  placeholder="请输入订单号" autocomplete="off" class="layui-input">
+            <input type="text" name="username"  placeholder="请输入IP地址" autocomplete="off" class="layui-input">
             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">查询</i></button>
         </form>
     </div>
@@ -41,11 +41,8 @@
     <table class="layui-table">
         <thead>
         <tr>
-            <th>
-                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-            </th>
-            <th>主机名称</th>
             <th>IP地址</th>
+            <th>主机名称</th>
             <th>用户</th>
             <th>密码</th>
             <th>操作</th>
@@ -53,11 +50,8 @@
         </thead>
         <tbody>
         <tr th:each="appHost,iterStat : ${appHostList}">
-            <td>
-                <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-            </td>
-            <td th:text="${appHost.host_name}"></td>
             <td th:text="${appHost.host_ip}"></td>
+            <td th:text="${appHost.host_name}"></td>
             <td th:text="${appHost.user_name}"></td>
             <td th:text="${appHost.user_pass}"></td>
             <td class="td-manage">
