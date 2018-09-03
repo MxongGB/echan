@@ -191,6 +191,7 @@ function x_admin_show(title,url,w,h){
     });
 }
 
+
 /*关闭弹出框口*/
 function x_admin_close(){
     var index = parent.layer.getFrameIndex(window.name);

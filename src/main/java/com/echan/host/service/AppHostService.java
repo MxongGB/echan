@@ -29,4 +29,13 @@ public class AppHostService {
             e.printStackTrace();
         }
     }
+
+    public Map<String,Object> findAppHostForIP(String ip) {
+        try {
+            return appHostDao.queryAppHostForIP(ip);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

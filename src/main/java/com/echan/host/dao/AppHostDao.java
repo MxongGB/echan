@@ -21,4 +21,8 @@ public class AppHostDao {
         String sql = "insert into tf_b_host_app(host_ip, host_name, user_name, user_pass) values (?,?,?,?)";
         template.update(sql,new Object[]{host_ip,host_name,user_name,user_pass});
     }
+
+    public Map<String,Object> queryAppHostForIP(String ip) {
+        return template.queryForMap("select * from tf_b_host_app where host_ip=?",new Object[]{ip.trim()});
+    }
 }
