@@ -19,7 +19,7 @@ public class AppHostController {
         // 查询所有主机
         List<Map<String,Object>> appHostList = appHostService.findAppHostForAll();
         model.addAttribute("appHostList",appHostList);
-        return "host/app_host";
+        return "host/app_host_list";
     }
 
     @PostMapping("search")
@@ -28,12 +28,12 @@ public class AppHostController {
         List<Map<String,Object>> appHostList = appHostService.findAppHostByIP(host_ip);
         model.addAttribute("appHostList",appHostList);
         model.addAttribute("seach_key",host_ip);
-        return "host/app_host";
+        return "host/app_host_list";
     }
 
     @GetMapping("add")
     public String addHost(){
-        return "host/add_app_host";
+        return "host/app_host_add";
     }
 
     @PostMapping("add")
@@ -50,7 +50,7 @@ public class AppHostController {
     public String editHost(@RequestParam(required = true) String ip,Model model){
         Map<String,Object> appHost = appHostService.findAppHostForIP(ip);
         model.addAttribute("appHost",appHost);
-        return "host/edit_app_host";
+        return "host/app_host_edit";
     }
 
     @PostMapping("edit")

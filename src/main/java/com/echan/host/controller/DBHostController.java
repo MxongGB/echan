@@ -10,6 +10,6 @@ public class DBHostController {
 
     @GetMapping("home")
     public String home(){
-        return "host/db_host";
+        return "db_host_list";
     }
 }
