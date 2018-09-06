@@ -18,21 +18,6 @@ public class MiddlewareDao {
     // 查询所有中间件
     public List<Map<String, Object>> queryMiddlewareForAll() {
         String sql="select middleware_id,middleware_name,middleware_host,script_path,script_start,script_check,script_stop,browser_path from tf_b_middleware";
-        /*template.queryForList(sql, new RowMapper<Middleware>() {
-            @Override
-            public Middleware mapRow(ResultSet resultSet, int i) throws SQLException {
-                Middleware middleware = new Middleware();
-                middleware.setMiddlewareId(resultSet.getString("middleware_id"));
-                middleware.setMiddlewareName(resultSet.getString("middleware_name"));
-                middleware.setMiddlewareHost(resultSet.getString("middleware_host"));
-                middleware.setScriptPath(resultSet.getString("script_path"));
-                middleware.setScriptStart(resultSet.getString("script_start"));
-                middleware.setScriptCheck(resultSet.getString("script_check"));
-                middleware.setScriptStop(resultSet.getString("script_stop"));
-                middleware.setBrowserPath(resultSet.getString("browser_path"));
-                return middleware;
-            }
-        });*/
         return template.queryForList(sql);
     }
     // 添加中间件
@@ -55,5 +40,20 @@ public class MiddlewareDao {
                 middleware.getScriptPath(), middleware.getScriptStart(),
                 middleware.getScriptCheck(), middleware.getScriptStop(),
                 middleware.getBrowserPath(),middleware.getMiddlewareId()});
+    }
+
+    public Map<String,Object> queryMiddlewareById(String middlewareId) {
+        String sql="select middleware_id,middleware_name,middleware_host,script_path,script_start,script_check,script_stop,browser_path from tf_b_middleware where middleware_id=?";
+        return template.queryForMap(sql,new Object[]{middlewareId});
+    }
+
+    public int deleteMiddleware(String middlewareId) {
+        String sql="delete from tf_b_middleware where middleware_id=?";
+        return template.update(sql,new Object[]{middlewareId});
+    }
+
+    public List<Map<String,Object>> queryMiddlewareName() {
+        String sql="select middleware_id,middleware_name from tf_b_middleware";
+        return template.queryForList(sql);
     }
 }

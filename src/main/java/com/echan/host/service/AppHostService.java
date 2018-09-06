@@ -88,4 +88,13 @@ public class AppHostService {
             return result;
         }
     }
+    // 查询所有主机IP
+    public List<Map<String,Object>> findAppHostIP(){
+        try {
+            return appHostDao.queryAppHostIP();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -18,80 +18,88 @@
 <div class="x-body">
     <form class="layui-form">
         <div class="layui-form-item">
-            <label for="username" class="layui-form-label">中间件名称</label>
+            <input type="hidden" id="appId" name="appId" th:value="${app.app_id}">
+            <label for="username" class="layui-form-label">应用名称</label>
             <div class="layui-input-inline">
-                <input type="text" id="middleName" name="middleName" lay-verify="required"
+                <input type="text" id="appName" name="appName" th:value="${app.app_name}" lay-verify="required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="middlewareHost" class="layui-form-label">中间件主机</label>
+            <label for="middlewareHost" class="layui-form-label">应用主机</label>
             <div class="layui-input-inline">
-                <select name="middleHost">
-                    <option th:each="appHost,iterStat : ${appHosts}" th:value="${appHost.host_ip}" th:text="${appHost.host_ip}"></option>
+                <select name="hostIp">
+                    <option th:each="appHost,state: ${appHosts}" th:selected="${app.host_ip eq appHost.host_ip}" th:value="${appHost.host_ip}" th:text="${appHost.host_ip}"></option>
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="phone" class="layui-form-label">bin路径</label>
+            <label for="middlewareHost" class="layui-form-label">项目名称</label>
             <div class="layui-input-inline">
-                <input type="text" id="scriptPath" name="scriptPath" lay-verify="required"
+                <select name="projectId">
+                    <option th:each="project,state: ${projects}" th:selected="${app.project_id eq project.project_id}" th:value="${project.project_id}" th:text="${project.project_name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">部署路径</label>
+            <div class="layui-input-inline">
+                <input type="text" id="deployPath" name="deployPath" th:value="${app.deploy_path}" lay-verify="required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">脚本路径</label>
+            <div class="layui-input-inline">
+                <input type="text" id="scriptPath" name="scriptPath" th:value="${app.script_path}" lay-verify="required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">启动脚本</label>
             <div class="layui-input-inline">
-                <input type="text" id="scriptStart" name="scriptStart" lay-verify="required"
+                <input type="text" id="scriptStart" name="scriptStart" th:value="${app.script_start}" lay-verify="required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">检查脚本</label>
             <div class="layui-input-inline">
-                <input type="text" id="scriptCheck" name="scriptCheck" lay-verify="required"
+                <input type="text" id="scriptCheck" name="scriptCheck" th:value="${app.script_check}" lay-verify="required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">停止脚本</label>
             <div class="layui-input-inline">
-                <input type="text" id="scriptStop" name="scriptStop" lay-verify="required"
+                <input type="text" id="scriptStop" name="scriptStop" th:value="${app.script_stop}" lay-verify="required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="username" class="layui-form-label">访问路径</label>
+            <label for="username" class="layui-form-label">日志文件</label>
             <div class="layui-input-inline">
-                <input type="text" id="browserPath" name="browserPath" lay-verify="required"
+                <input type="text" id="logFile" name="logFile" th:value="${app.log_file}" lay-verify="required"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
 
-
-    <div class="layui-form-item">
-        <label for="L_repass" class="layui-form-label"></label>
-        <button  class="layui-btn" lay-filter="add" lay-submit="">增加</button>
-    </div>
-</form>
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label"></label>
+            <button  class="layui-btn" lay-filter="edit">修改</button>
+        </div>
+    </form>
 </div>
 <script>
     layui.use(['form','layer'], function(){
         var form = layui.form;
         var layer = layui.layer;
-        //自定义验证规则
-        /*form.verify({
-            host_name: function(value){if (value.length == 0){return '主机名称不能为空！';}}
-            ,host_ip:   function(value){if (value.length==0){return '主机IP不能为空！';}}
-            ,user_name: function(value){if (value.length==0){return '用户名称不能为空！';}}
-            ,user_pass: function(value){if (value.length==0){return '用户密码不能为空！';}}
-        });*/
 
         //监听提交
-        form.on('submit(add)', function(formData){
+        form.on('submit(edit)', function(formData){
             console.log(formData);
             //发异步提交数据
-            $.post("/middleware/add",formData.field,function (data) {
+            $.post("/app/edit",formData.field,function (data) {
                 // 温馨提示
                 layer.alert(data.msge, {icon: 6},function () {close_panel();});
             },"json");

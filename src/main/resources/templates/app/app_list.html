@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>中间件服务</title>
+    <title>应用管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
@@ -23,42 +23,56 @@
         <a>
           <cite>导航元素</cite></a>
       </span>
-    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace('/app/home');" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
 <div class="x-body">
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so" action="/app/search" method="post">
+            <label for="middlewareHost" class="layui-form-label">项目</label>
+            <div class="layui-input-inline">
+                <select name="projectId">
+                    <option th:each="project,state: ${projects}" th:value="${project.project_id}" th:text="${project.project_name}"></option>
+                </select>
+            </div>
+            <button class="layui-btn" lay-filter="sreach"><i class="layui-icon">查询</i></button>
+        </form>
+    </div>
     <xblock>
-        <button class="layui-btn" onclick="open_panel('添加中间件','/middleware/add')">添加</button>
+        <button class="layui-btn" onclick="open_panel('添加应用','/app/add')">添加</button>
         <span class="x-right" style="line-height:40px">共有数据：88 条</span>
     </xblock>
     <table class="layui-table">
         <thead>
         <tr>
-            <th>中间件名称</th>
-            <th>中间件主机</th>
-            <th>bin目录</th>
+            <th>应用名称</th>
+            <th>应用主机</th>
+            <th>部署路径</th>
+            <th>脚本路径</th>
             <th>启动脚本</th>
             <th>检查脚本</th>
             <th>停止脚本</th>
-            <th>访问路径</th>
+            <th>日志文件</th>
             <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="middleware,iterStat : ${middlewares}">
-            <td th:text="${middleware.middleware_name}"></td>
-            <td th:text="${middleware.middleware_host}"></td>
-            <td th:text="${middleware.script_path}"></td>
-            <td th:text="${middleware.script_start}"></td>
-            <td th:text="${middleware.script_check}"></td>
-            <td th:text="${middleware.script_stop}"></td>
-            <td th:text="${middleware.browser_path}"></td>
+        <tr th:each="app,stat : ${apps}">
+            <td th:text="${app.app_name}"></td>
+            <td th:text="${app.host_ip}"></td>
+            <td th:text="${app.deploy_path}"></td>
+            <td th:text="${app.script_path}"></td>
+            <td th:text="${app.script_start}"></td>
+            <td th:text="${app.script_check}"></td>
+            <td th:text="${app.script_stop}"></td>
+            <td th:text="${app.log_file}"></td>
+
             <td class="td-manage">
-                <a title="查看" th:onclick="'javascript:open_panel(\'修改中间件\',\'/middleware/edit?middlewareId='+${middleware.middleware_id}+'\');'">
+                <a title="查看" th:onclick="'javascript:open_panel(\'修改应用\',\'/app/edit?appId='+${app.app_id}+'\');'">
                     <i class="layui-icon">查看</i>
                 </a>
-                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <a title="删除" th:onclick="'javascript:member_del(this,\''+${middleware.middleware_id}+'\');'">
+                |
+                <a title="删除" th:onclick="'javascript:member_del(this,\''+${app.app_id}+'\');'">
                     <i class="layui-icon">删除</i>
                 </a>
             </td>
@@ -75,17 +89,26 @@
             <a class="next" href="">&gt;&gt;</a>
         </div>
     </div>
-
 </div>
 <script>
+    layui.use(['form','layer'], function(){
+        var form = layui.form, layer = layui.layer;
+        //监听提交
+        form.on('submit(sreach)', function(formData){
+            // 温馨提示
+            layer.alert("稍等...", {icon: 6},function () {close_panel();});
+            return false;
+        });
+    });
+
     /*用户-删除*/
     function member_del(obj,id){
         layer.confirm('确认要删除吗？',function(index){
             //发异步删除数据
-            $.post("/middleware/remove",{middlewareId:id},function (data) {
+            $.post("/app/remove",{appId:id},function (data) {
                 layer.msg(data.msge,{icon:1,time:1000});
                 // 刷新
-                location.replace('/middleware/home');
+                location.replace('/app/home');
             },"json")
         });
     }

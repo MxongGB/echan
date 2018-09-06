@@ -1,6 +1,8 @@
 package com.echan.middleware.entity;
 
-public class Middleware {
+import java.io.Serializable;
+
+public class Middleware implements Serializable {
     private String middlewareId;
     private String middlewareName;
     private String middlewareHost;
@@ -9,6 +11,20 @@ public class Middleware {
     private String scriptCheck;
     private String scriptStop;
     private String browserPath;
+
+    public Middleware() {
+    }
+
+    public Middleware(String middlewareId,String middlewareName, String middlewareHost, String scriptPath, String scriptStart, String scriptCheck, String scriptStop, String browserPath) {
+        this.middlewareId = middlewareId;
+        this.middlewareName = middlewareName;
+        this.middlewareHost = middlewareHost;
+        this.scriptPath = scriptPath;
+        this.scriptStart = scriptStart;
+        this.scriptCheck = scriptCheck;
+        this.scriptStop = scriptStop;
+        this.browserPath = browserPath;
+    }
 
     public String getMiddlewareId() {
         return middlewareId;

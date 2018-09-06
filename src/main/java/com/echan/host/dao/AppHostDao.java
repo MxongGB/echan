@@ -39,5 +39,9 @@ public class AppHostDao {
         return template.update(sql,new Object[]{host_ip});
     }
 
-
+    // 获取所有主机IP
+    public List<Map<String,Object>> queryAppHostIP() {
+        String sql="select host_ip from tf_b_host_app order by host_ip";
+        return template.queryForList(sql);
+    }
 }

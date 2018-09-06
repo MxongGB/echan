@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>中间件服务</title>
+    <title>项目管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
@@ -28,37 +28,27 @@
 </div>
 <div class="x-body">
     <xblock>
-        <button class="layui-btn" onclick="open_panel('添加中间件','/middleware/add')">添加</button>
+        <button class="layui-btn" onclick="open_panel('添加项目','/project/add')">添加</button>
         <span class="x-right" style="line-height:40px">共有数据：88 条</span>
     </xblock>
     <table class="layui-table">
         <thead>
         <tr>
+            <th>项目名称</th>
             <th>中间件名称</th>
-            <th>中间件主机</th>
-            <th>bin目录</th>
-            <th>启动脚本</th>
-            <th>检查脚本</th>
-            <th>停止脚本</th>
-            <th>访问路径</th>
             <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="middleware,iterStat : ${middlewares}">
-            <td th:text="${middleware.middleware_name}"></td>
-            <td th:text="${middleware.middleware_host}"></td>
-            <td th:text="${middleware.script_path}"></td>
-            <td th:text="${middleware.script_start}"></td>
-            <td th:text="${middleware.script_check}"></td>
-            <td th:text="${middleware.script_stop}"></td>
-            <td th:text="${middleware.browser_path}"></td>
+        <tr th:each="project,iterStat : ${projects}">
+            <td th:text="${project.project_name}"></td>
+            <td th:text="${project.middleware_name}"></td>
             <td class="td-manage">
-                <a title="查看" th:onclick="'javascript:open_panel(\'修改中间件\',\'/middleware/edit?middlewareId='+${middleware.middleware_id}+'\');'">
+                <a title="查看" th:onclick="'javascript:open_panel(\'修改项目\',\'/project/edit?projectId='+${project.project_id}+'\');'">
                     <i class="layui-icon">查看</i>
                 </a>
                 <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <a title="删除" th:onclick="'javascript:member_del(this,\''+${middleware.middleware_id}+'\');'">
+                <a title="删除" th:onclick="'javascript:member_del(this,\''+${project.project_id}+'\');'">
                     <i class="layui-icon">删除</i>
                 </a>
             </td>
@@ -82,10 +72,10 @@
     function member_del(obj,id){
         layer.confirm('确认要删除吗？',function(index){
             //发异步删除数据
-            $.post("/middleware/remove",{middlewareId:id},function (data) {
+            $.post("/project/remove",{projectId:id},function (data) {
                 layer.msg(data.msge,{icon:1,time:1000});
                 // 刷新
-                location.replace('/middleware/home');
+                location.replace('/project/home');
             },"json")
         });
     }
